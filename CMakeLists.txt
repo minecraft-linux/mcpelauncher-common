@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.6...4.0.0)
 
 project(mcpelauncher-common LANGUAGES CXX)
 
-find_library(OpenSSL OPTIONAL)
+find_package(OpenSSL)
 
 set(MCPELAUNCHER_COMMON_SOURCES include/mcpelauncher/path_helper.h src/path_helper.cpp)
 if (OPENSSL_FOUND)
@@ -15,7 +15,8 @@ endif()
 add_library(mcpelauncher-common ${MCPELAUNCHER_COMMON_SOURCES})
 target_include_directories(mcpelauncher-common PUBLIC include/)
 if (OPENSSL_FOUND)
-    target_link_libraries(mcpelauncher-common ${OPENSSL_CRYPTO_LIBRARY})
+    target_include_directories(mcpelauncher-common PRIVATE ${OPENSSL_INCLUDE_DIR})
+    target_link_libraries(mcpelauncher-common OpenSSL::Crypto)
 endif()
 if (APPLE)
     target_link_libraries(mcpelauncher-common "-framework Foundation")
